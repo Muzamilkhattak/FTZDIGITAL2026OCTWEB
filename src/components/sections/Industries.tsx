@@ -29,10 +29,9 @@ export function Industries() {
     { name: "Oslo Elite", logo: "/clients logo/Oslo Elite logo.jpg", width: 192, height: 96 },
   ];
 
-  const chunkedClients = [];
-  for (let i = 0; i < clients.length; i += 2) {
-    chunkedClients.push(clients.slice(i, i + 2));
-  }
+  const midPoint = Math.ceil(clients.length / 2);
+  const row1Clients = clients.slice(0, midPoint);
+  const row2Clients = clients.slice(midPoint);
 
   return (
     <section
@@ -71,69 +70,73 @@ export function Industries() {
         />
 
         {/* Ultra-smooth fast CSS animation slider */}
-        <div className="overflow-hidden py-4">
+        <div className="overflow-hidden py-4 flex flex-col gap-4">
           <style>{`
-            @keyframes scroll-fast {
+            @keyframes scroll-left {
               0% { transform: translateX(0); }
               100% { transform: translateX(-50%); }
             }
+            @keyframes scroll-right {
+              0% { transform: translateX(-50%); }
+              100% { transform: translateX(0); }
+            }
             
-            .logo-scroll-track {
-              animation: scroll-fast 30s linear infinite;
+            .logo-scroll-track-left {
+              animation: scroll-left 30s linear infinite;
               display: flex;
               width: fit-content;
             }
 
-            .logo-scroll-track:hover {
+            .logo-scroll-track-right {
+              animation: scroll-right 30s linear infinite;
+              display: flex;
+              width: fit-content;
+            }
+
+            .logo-scroll-track-left:hover, .logo-scroll-track-right:hover {
               animation-play-state: paused;
             }
           `}</style>
 
-          <div className="logo-scroll-track gap-2 md:gap-4 pl-2 md:pl-4">
-            {/* First set of logos */}
-            {chunkedClients.map((pair, index) => (
-              <div key={`set1-${index}`} className="flex flex-col gap-2 md:gap-4 flex-shrink-0">
-                {pair.map((client, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white hover:bg-neutral-50 transition-all duration-300 rounded-xl flex items-center justify-center p-4 w-48 sm:w-56 md:w-64 h-28 sm:h-32 md:h-40"
-                  >
-                    <img
-                      src={client.logo}
-                      alt={client.name}
-                      width={client.width}
-                      height={client.height}
-                      className="w-full h-full object-contain transition-transform hover:scale-110 duration-300"
-                      loading={index < 3 ? "eager" : "lazy"}
-                      fetchPriority={index < 3 ? "high" : "auto"}
-                      decoding="async"
-                      draggable="false"
-                    />
-                  </div>
-                ))}
+          {/* First Row - Slides from Right to Left */}
+          <div className="logo-scroll-track-left gap-2 md:gap-4 pl-2 md:pl-4">
+            {[...row1Clients, ...row1Clients].map((client, idx) => (
+              <div
+                key={`row1-${idx}`}
+                className="transition-all duration-300 rounded-xl flex items-center justify-center p-4 w-48 sm:w-56 md:w-64 h-28 sm:h-32 md:h-40 flex-shrink-0"
+              >
+                <img
+                  src={client.logo}
+                  alt={client.name}
+                  width={client.width}
+                  height={client.height}
+                  className="w-full h-full object-contain transition-transform hover:scale-110 duration-300"
+                  loading={idx < 3 ? "eager" : "lazy"}
+                  fetchPriority={idx < 3 ? "high" : "auto"}
+                  decoding="async"
+                  draggable="false"
+                />
               </div>
             ))}
+          </div>
 
-            {/* Duplicate set for seamless loop */}
-            {chunkedClients.map((pair, index) => (
-              <div key={`set2-${index}`} className="flex flex-col gap-2 md:gap-4 flex-shrink-0">
-                {pair.map((client, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white hover:bg-neutral-50 transition-all duration-300 rounded-xl flex items-center justify-center p-4 w-48 sm:w-56 md:w-64 h-28 sm:h-32 md:h-40"
-                  >
-                    <img
-                      src={client.logo}
-                      alt={client.name}
-                      width={client.width}
-                      height={client.height}
-                      className="w-full h-full object-contain transition-transform hover:scale-110 duration-300"
-                      loading="lazy"
-                      decoding="async"
-                      draggable="false"
-                    />
-                  </div>
-                ))}
+          {/* Second Row - Slides from Left to Right */}
+          <div className="logo-scroll-track-right gap-2 md:gap-4 pl-2 md:pl-4">
+            {[...row2Clients, ...row2Clients].map((client, idx) => (
+              <div
+                key={`row2-${idx}`}
+                className="transition-all duration-300 rounded-xl flex items-center justify-center p-4 w-48 sm:w-56 md:w-64 h-28 sm:h-32 md:h-40 flex-shrink-0"
+              >
+                <img
+                  src={client.logo}
+                  alt={client.name}
+                  width={client.width}
+                  height={client.height}
+                  className="w-full h-full object-contain transition-transform hover:scale-110 duration-300"
+                  loading="lazy"
+                  decoding="async"
+                  draggable="false"
+                />
               </div>
             ))}
           </div>
